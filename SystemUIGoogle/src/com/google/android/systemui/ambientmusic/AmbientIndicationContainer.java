@@ -114,9 +114,6 @@ public class AmbientIndicationContainer extends AutoReinflateContainer implement
             public void onInflated(View view) {
                 mTextView = (TextView) findViewById(R.id.ambient_indication_text);
                 mIconView = (ImageView) findViewById(R.id.ambient_indication_icon);
-                if (mTextView == null || mIconView == null || mContext == null) {
-                    return;
-                }
                 mAmbientIndicationContainer = (ConstraintLayout) findViewById(R.id.ambient_indication);
                 ConstraintSet constraintSet = new ConstraintSet();
                 int[] udfpsProps = context.getResources().getIntArray(
@@ -225,7 +222,7 @@ public class AmbientIndicationContainer extends AutoReinflateContainer implement
 
     public void onTextClick() {
         if (mOpenIntent != null) {
-            mCentralSurfaces.wakeUpIfDozing(SystemClock.uptimeMillis(), "AMBIENT_MUSIC_CLICK", PowerManager.WAKE_REASON_GESTURE);
+            mCentralSurfaces.wakeUpDeviceifDozing();
             if (mAmbientSkipUnlock) {
                 sendBroadcastWithoutDismissingKeyguard(mOpenIntent);
             } else {
@@ -236,7 +233,7 @@ public class AmbientIndicationContainer extends AutoReinflateContainer implement
 
     private void onIconClick() {
         if (mFavoritingIntent != null) {
-            mCentralSurfaces.wakeUpIfDozing(SystemClock.uptimeMillis(), "AMBIENT_MUSIC_CLICK", PowerManager.WAKE_REASON_GESTURE);
+            mCentralSurfaces.wakeUpDeviceifDozing();
             sendBroadcastWithoutDismissingKeyguard(mFavoritingIntent);
             return;
         }
@@ -301,11 +298,11 @@ public class AmbientIndicationContainer extends AutoReinflateContainer implement
         } else {
             z = false;
         }
-        ShadeViewController shadeViewController = mCentralSurfaces.getShadeViewController();
+        ShadeViewController shadeViewController = mCentralSurfaces.getNotificationPanelViewController();
         int top = getTop();
         NotificationPanelViewController notificationPanelViewController = (NotificationPanelViewController) shadeViewController;
         if (z) {
-            i = notificationPanelViewController.getNotificationStackScrollLayoutController().getNotificationStackScrollLayoutView().getBottom() - top;
+            i = notificationPanelViewController.getScrollerLayoutController().getNotificationStackScrollLayoutView().getBottom() - top;
         }
         if (notificationPanelViewController.getAmbientIndicationBottomPadding() != i) {
             notificationPanelViewController.setAmbientIndicationBottomPadding(i);
@@ -369,10 +366,10 @@ public class AmbientIndicationContainer extends AutoReinflateContainer implement
         int i;
         int i2;
         int i3;
-        if (mTextView == null || mIconView == null) {
+        TextView textView2 = mTextView;
+        if (textView2 == null) {
             return;
         }
-        TextView textView2 = mTextView;
         int i4 = mIndicationTextMode;
         mIndicationTextMode = 1;
         CharSequence charSequence2 = mAmbientMusicText;
